@@ -1,0 +1,25 @@
+/* ==========================================================================
+   Notebook gallery
+   ========================================================================== */
+
+#gallery {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+#gallery div {
+  border: 2px solid black;
+  border-radius: 10px;
+  flex: 0 1 230px;
+  margin: 10px;
+  padding: 5px;
+}
+
+#gallery div:hover {
+  border-color: #F3A536;
+}
+
+#gallery div img {
+  width: 100%;
+  height: auto;
+}
