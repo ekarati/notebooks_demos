@@ -14,7 +14,7 @@ In&nbsp;[1]:
 
 ```python
 # See https://github.com/Unidata/netcdf-c/issues/1299 for the explanation of `#fillmismatch`.
-    
+
 url = (
     'https://data.ioos.us/thredds/dodsC/deployments/rutgers/'
     'ru29-20150623T1046/ru29-20150623T1046.nc3.nc#fillmismatch'

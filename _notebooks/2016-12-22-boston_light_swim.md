@@ -672,7 +672,7 @@ for mod_name, cube in cubes.items():
     print(fmt(' Downloading to file {} '.format(fname)))
     try:
         tree, lon, lat = make_tree(cube)
-    except CoordinateNotFoundError as e:
+    except CoordinateNotFoundError:
         print('Cannot make KDTree for: {}'.format(mod_name))
         continue
     # Get model series at observed locations.
@@ -688,7 +688,7 @@ for mod_name, cube in cubes.items():
             except RuntimeError as e:
                 print('Cannot download {!r}.\n{}'.format(cube, e))
                 series = None
-        except ValueError as e:
+        except ValueError:
             status = 'No Data'
             print('[{}] {}'.format(status, obs['station_name']))
             continue

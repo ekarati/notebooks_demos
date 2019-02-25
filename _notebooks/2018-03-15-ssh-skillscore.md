@@ -490,7 +490,7 @@ In&nbsp;[11]:
 from iris.exceptions import (CoordinateNotFoundError, ConstraintMismatchError,
                              MergeError)
 from ioos_tools.ioos import get_model_name
-from ioos_tools.tardis import quick_load_cubes, proc_cube, is_model, get_surface
+from ioos_tools.tardis import quick_load_cubes, proc_cube, is_model
 
 print(fmt(' Models '))
 cubes = dict()
@@ -546,7 +546,7 @@ In&nbsp;[12]:
 import iris
 from iris.pandas import as_series
 from ioos_tools.tardis import (make_tree, get_nearest_water,
-                               add_station, ensure_timeseries, remove_ssh)
+                               add_station, ensure_timeseries)
 
 for mod_name, cube in cubes.items():
     fname = '{}.nc'.format(mod_name)
@@ -554,7 +554,7 @@ for mod_name, cube in cubes.items():
     print(fmt(' Downloading to file {} '.format(fname)))
     try:
         tree, lon, lat = make_tree(cube)
-    except CoordinateNotFoundError as e:
+    except CoordinateNotFoundError:
         print('Cannot make KDTree for: {}'.format(mod_name))
         continue
     # Get model series at observed locations.
@@ -570,7 +570,7 @@ for mod_name, cube in cubes.items():
             except RuntimeError as e:
                 print('Cannot download {!r}.\n{}'.format(cube, e))
                 series = None
-        except ValueError as e:
+        except ValueError:
             status = 'No Data'
             print('[{}] {}'.format(status, obs['station_name']))
             continue
@@ -734,7 +734,6 @@ from ioos_tools.ioos import get_coordinates
 
 def make_map(bbox, **kw):
     line = kw.pop('line', True)
-    layers = kw.pop('layers', True)
     zoom_start = kw.pop('zoom_start', 5)
 
     lon = (bbox[0] + bbox[2]) / 2

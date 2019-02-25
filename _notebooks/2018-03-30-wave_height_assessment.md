@@ -106,10 +106,14 @@ def make_filter(config):
               singleChar='?', propertyname='apiso:Subject')
 
     if len(config['cf_names']) > 1:
-        or_filt = fes.Or([fes.PropertyIsLike(literal=('*%s*' % val), **kw)
-                      for val in config['cf_names']])
+        or_filt = fes.Or(
+            [
+                fes.PropertyIsLike(literal=('*{val}*'), **kw)
+                for val in config['cf_names']
+            ]
+        )
     else:
-        or_filt = fes.PropertyIsLike(literal=('*%s*' % config['cf_names'][0]), **kw)      
+        or_filt = fes.PropertyIsLike(literal=(f'*{config["cf_names"][0]}*'), **kw)
 
     not_filt = fes.Not([fes.PropertyIsLike(literal='GRIB-2', **kw)])
 
@@ -409,8 +413,7 @@ for series in data:
     series.index = series.index.tz_localize(None)
     obs = series.reindex(index=index, limit=1, method='nearest')
     obs._metadata = _metadata
-    # FIXME: remove this!
-    obs._metadata['standard_name']='sea_surface_wave_significant_height'
+    obs._metadata['standard_name'] = 'sea_surface_wave_significant_height'
 
     observations.append(obs)
 ```
@@ -489,7 +492,7 @@ In&nbsp;[13]:
 from iris.exceptions import (CoordinateNotFoundError, ConstraintMismatchError,
                              MergeError)
 from ioos_tools.ioos import get_model_name
-from ioos_tools.tardis import quick_load_cubes, proc_cube, is_model, get_surface
+from ioos_tools.tardis import quick_load_cubes, proc_cube, is_model
 
 print(fmt(' Models '))
 cubes = dict()
@@ -541,7 +544,7 @@ In&nbsp;[14]:
 import iris
 from iris.pandas import as_series
 from ioos_tools.tardis import (make_tree, get_nearest_water,
-                               add_station, ensure_timeseries, remove_ssh)
+                               add_station, ensure_timeseries)
 
 for mod_name, cube in cubes.items():
     fname = '{}.nc'.format(mod_name)
@@ -549,7 +552,7 @@ for mod_name, cube in cubes.items():
     print(fmt(' Downloading to file {} '.format(fname)))
     try:
         tree, lon, lat = make_tree(cube)
-    except CoordinateNotFoundError as e:
+    except CoordinateNotFoundError:
         print('Cannot make KDTree for: {}'.format(mod_name))
         continue
     # Get model series at observed locations.
@@ -565,7 +568,7 @@ for mod_name, cube in cubes.items():
             except RuntimeError as e:
                 print('Cannot download {!r}.\n{}'.format(cube, e))
                 series = None
-        except ValueError as e:
+        except ValueError:
             status = 'No Data'
             print('[{}] {}'.format(status, obs['station_name']))
             continue
@@ -735,13 +738,25 @@ def make_map(bbox, **kw):
 
     if layers:
         url = 'http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd'
-        w = folium.WmsTileLayer(url, name='COAWST Wave Height', fmt='image/png', layers='Hwave',
-            style='boxfill/rainbow', COLORSCALERANGE='0,5', overlay=True, transparent=True)
-
+        w = folium.WmsTileLayer(
+            url,
+            name='COAWST Wave Height',
+            fmt='image/png',
+            layers='Hwave',
+            style='boxfill/rainbow',
+            COLORSCALERANGE='0,5',
+            overlay=True,
+            transparent=True
+        )
         w.add_to(m)
 
     if line:
-        p = folium.PolyLine(get_coordinates(bbox), color='#FF0000', weight=2, opacity=0.9)
+        p = folium.PolyLine(
+            get_coordinates(bbox),
+            color='#FF0000',
+            weight=2,
+            opacity=0.9
+        )
         p.add_to(m)
     return m
 ```
@@ -797,7 +812,7 @@ groups = df.groupby(df.index)
 
 locations, popups = [], []
 for station, info in groups:
-    sta_name = all_obs[station].replace("'","")
+    sta_name = all_obs[station].replace("'", "")
     for lat, lon, name in zip(info.lat, info.lon, info.name):
         locations.append([lat, lon])
         popups.append('[{}]: {}'.format(name, sta_name))
@@ -907,7 +922,7 @@ In&nbsp;[24]:
 dfs = load_ncs(config)
 
 for station in dfs:
-    sta_name = all_obs[station].replace("'","")
+    sta_name = all_obs[station].replace("'", "")
     df = dfs[station]
     if df.empty:
         continue
