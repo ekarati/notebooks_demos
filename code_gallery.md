@@ -4,6 +4,7 @@ layout: single
 ---
 
 <div id="gallery">
+<div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2019-02-26-hurricane_gis_part01"><figcaption>Accessing data from SOS using NHC GIS files</figcaption><img src="images/placeholder.png"></a></div>
 <div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2018-12-04-grids"><figcaption>IOOS models</figcaption><img src="images/2018-12-04-grids.png"></a></div>
 <div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2018-03-30-wave_height_assessment"><figcaption>Coastal Ocean Wave Height Assessment</figcaption><img src="images/2018-03-30-wave_height_assessment.png"></a></div>
 <div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2018-03-15-ssh-skillscore"><figcaption>Investigating ocean models skill for sea surface height with IOOS catalog and Python</figcaption><img src="images/placeholder.png"></a></div>
