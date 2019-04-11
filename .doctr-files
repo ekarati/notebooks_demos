@@ -83,6 +83,17 @@
 ./_notebooks/2018-12-04-grids_files/2018-12-04-grids_9_8.png
 ./_notebooks/2018-12-04-grids_files/2018-12-04-grids_9_9.png
 ./_notebooks/2019-02-26-hurricane_gis_part01.md
+./_notebooks/2019-03-08-grids-temperature.md
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_0.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_1.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_2.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_3.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_4.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_5.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_6.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_7.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_8.png
+./_notebooks/2019-03-08-grids-temperature_files/2019-03-08-grids-temperature_11_9.png
 ./assets/Data_Demo_Center_middlepic_size770.png
 ./assets/GLOS.png
 ./assets/IOOS-logo_little.png
@@ -111,6 +122,7 @@
 ./code_gallery/images/2018-03-01-erddapy.png
 ./code_gallery/images/2018-03-30-wave_height_assessment.png
 ./code_gallery/images/2018-12-04-grids.png
+./code_gallery/images/2019-03-08-grids-temperature.png
 ./code_gallery/images/placeholder.png
 ./contact.md
 ./index.md
