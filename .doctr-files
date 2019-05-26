@@ -128,7 +128,6 @@
 ./index.md
 ./ioos_jekyll_theme/CHANGELOG.md
 ./ioos_jekyll_theme/Gemfile
-./ioos_jekyll_theme/Gemfile.lock
 ./ioos_jekyll_theme/LICENSE
 ./ioos_jekyll_theme/README.md
 ./ioos_jekyll_theme/_config.yml
