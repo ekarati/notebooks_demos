@@ -480,4 +480,4 @@ To explore more datasets, use the IOOS sensor map [website](https://sensors.ioos
 <br>
 Right click and choose Save link as... to
 [download](https://raw.githubusercontent.com/ioos/notebooks_demos/master/notebooks/2017-03-21-ERDDAP_IOOS_Sensor_Map.ipynb)
-this notebook, or click [here](https://mybinder.org/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2017-03-21-ERDDAP_IOOS_Sensor_Map.ipynb) to run a live instance of this notebook.
+this notebook, or click [here](https://binder.pangeo.io/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2017-03-21-ERDDAP_IOOS_Sensor_Map.ipynb) to run a live instance of this notebook.

@@ -1475,4 +1475,4 @@ embed_map(m)
 <br>
 Right click and choose Save link as... to
 [download](https://raw.githubusercontent.com/ioos/notebooks_demos/master/notebooks/2018-03-15-ssh-skillscore.ipynb)
-this notebook, or click [here](https://mybinder.org/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2018-03-15-ssh-skillscore.ipynb) to run a live instance of this notebook.
+this notebook, or click [here](https://binder.pangeo.io/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2018-03-15-ssh-skillscore.ipynb) to run a live instance of this notebook.

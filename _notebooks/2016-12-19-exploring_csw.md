@@ -1185,4 +1185,4 @@ zBqCC1czMzMzawguXM3MzMysIfw/htrvVlv4rbYAAAAASUVORK5CYII=
 <br>
 Right click and choose Save link as... to
 [download](https://raw.githubusercontent.com/ioos/notebooks_demos/master/notebooks/2016-12-19-exploring_csw.ipynb)
-this notebook, or click [here](https://mybinder.org/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2016-12-19-exploring_csw.ipynb) to run a live instance of this notebook.
+this notebook, or click [here](https://binder.pangeo.io/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2016-12-19-exploring_csw.ipynb) to run a live instance of this notebook.

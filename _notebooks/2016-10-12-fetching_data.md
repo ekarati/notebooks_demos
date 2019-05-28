@@ -2949,4 +2949,4 @@ m
 <br>
 Right click and choose Save link as... to
 [download](https://raw.githubusercontent.com/ioos/notebooks_demos/master/notebooks/2016-10-12-fetching_data.ipynb)
-this notebook, or click [here](https://mybinder.org/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2016-10-12-fetching_data.ipynb) to run a live instance of this notebook.
+this notebook, or click [here](https://binder.pangeo.io/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2016-10-12-fetching_data.ipynb) to run a live instance of this notebook.

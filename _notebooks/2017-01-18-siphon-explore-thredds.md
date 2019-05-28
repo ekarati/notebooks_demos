@@ -5281,4 +5281,4 @@ sVyHn/2/f4a3vvWfs2fvHhZri/zJ+9/H8PAwjz/xOKZpkvNyLLVEferkyeX9hr2Qu+46cNP34Lny
 <br>
 Right click and choose Save link as... to
 [download](https://raw.githubusercontent.com/ioos/notebooks_demos/master/notebooks/2017-01-18-siphon-explore-thredds.ipynb)
-this notebook, or click [here](https://mybinder.org/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2017-01-18-siphon-explore-thredds.ipynb) to run a live instance of this notebook.
+this notebook, or click [here](https://binder.pangeo.io/v2/gh/ioos/notebooks_demos/master?filepath=notebooks/2017-01-18-siphon-explore-thredds.ipynb) to run a live instance of this notebook.
