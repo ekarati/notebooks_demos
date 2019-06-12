@@ -472,7 +472,7 @@ m
 
 
 
-Here we constructed the SOS data endpoint manu but
+Here we constructed the SOS data endpoint manually but
 IOOS maintains a Python library,
 [pyoos](https://github.com/ioos/pyoos),
 for collecting Met/Ocean observations from the SOS service and more:
