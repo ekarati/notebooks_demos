@@ -22,7 +22,7 @@ min_lon, max_lon = -123, -121
 min_lat, max_lat = 36, 40
 
 bbox = [min_lon, min_lat, max_lon, max_lat]
-crs = 'urn:ogc:def:crs:OGC:1.3:CRS84'
+crs = "urn:ogc:def:crs:OGC:1.3:CRS84"
 
 # Temporal range: past week.
 now = datetime.utcnow()
@@ -30,8 +30,8 @@ start, stop = now - timedelta(days=(14)), now - timedelta(days=(7))
 
 # Surface velocity CF names.
 cf_names = [
-    'surface_northward_sea_water_velocity',
-    'surface_eastward_sea_water_velocity'
+    "surface_northward_sea_water_velocity",
+    "surface_eastward_sea_water_velocity",
 ]
 
 msg = """
@@ -40,13 +40,17 @@ msg = """
 *bounding box*:{bbox}
 *crs*: {crs}""".format
 
-print(msg(**{
-    'cf_names': ', '.join(cf_names),
-    'start': start,
-    'stop': stop,
-    'bbox': bbox,
-    'crs': crs,
-}))
+print(
+    msg(
+        **{
+            "cf_names": ", ".join(cf_names),
+            "start": start,
+            "stop": stop,
+            "bbox": bbox,
+            "crs": crs,
+        }
+    )
+)
 ```
 <div class="output_area"><div class="prompt"></div>
 <pre>
@@ -70,25 +74,25 @@ In&nbsp;[2]:
 from owslib import fes
 
 
-def fes_date_filter(start, stop, constraint='overlaps'):
-    start = start.strftime('%Y-%m-%d %H:00')
-    stop = stop.strftime('%Y-%m-%d %H:00')
-    if constraint == 'overlaps':
-        propertyname = 'apiso:TempExtent_begin'
-        begin = fes.PropertyIsLessThanOrEqualTo(propertyname=propertyname,
-                                                literal=stop)
-        propertyname = 'apiso:TempExtent_end'
-        end = fes.PropertyIsGreaterThanOrEqualTo(propertyname=propertyname,
-                                                 literal=start)
-    elif constraint == 'within':
-        propertyname = 'apiso:TempExtent_begin'
-        begin = fes.PropertyIsGreaterThanOrEqualTo(propertyname=propertyname,
-                                                   literal=start)
-        propertyname = 'apiso:TempExtent_end'
-        end = fes.PropertyIsLessThanOrEqualTo(propertyname=propertyname,
-                                              literal=stop)
+def fes_date_filter(start, stop, constraint="overlaps"):
+    start = start.strftime("%Y-%m-%d %H:00")
+    stop = stop.strftime("%Y-%m-%d %H:00")
+    if constraint == "overlaps":
+        propertyname = "apiso:TempExtent_begin"
+        begin = fes.PropertyIsLessThanOrEqualTo(propertyname=propertyname, literal=stop)
+        propertyname = "apiso:TempExtent_end"
+        end = fes.PropertyIsGreaterThanOrEqualTo(
+            propertyname=propertyname, literal=start
+        )
+    elif constraint == "within":
+        propertyname = "apiso:TempExtent_begin"
+        begin = fes.PropertyIsGreaterThanOrEqualTo(
+            propertyname=propertyname, literal=start
+        )
+        propertyname = "apiso:TempExtent_end"
+        end = fes.PropertyIsLessThanOrEqualTo(propertyname=propertyname, literal=stop)
     else:
-        raise NameError('Unrecognized constraint {}'.format(constraint))
+        raise NameError("Unrecognized constraint {}".format(constraint))
     return begin, end
 ```
 
@@ -97,14 +101,12 @@ In&nbsp;[3]:
 </div>
 
 ```python
-kw = dict(wildCard='*', escapeChar='\\',
-          singleChar='?', propertyname='apiso:AnyText')
+kw = dict(wildCard="*", escapeChar="\\", singleChar="?", propertyname="apiso:AnyText")
 
-or_filt = fes.Or([fes.PropertyIsLike(literal=('*%s*' % val), **kw)
-                  for val in cf_names])
+or_filt = fes.Or([fes.PropertyIsLike(literal=("*%s*" % val), **kw) for val in cf_names])
 
 # Exclude GNOME returns.
-not_filt = fes.Not([fes.PropertyIsLike(literal='*GNOME*', **kw)])
+not_filt = fes.Not([fes.PropertyIsLike(literal="*GNOME*", **kw)])
 
 begin, end = fes_date_filter(start, stop)
 bbox_crs = fes.BBox(bbox, crs=crs)
@@ -123,16 +125,21 @@ def get_csw_records(csw, filter_list, pagesize=10, maxrecords=1000):
     `maxrecords` is reached.
     """
     from owslib.fes import SortBy, SortProperty
+
     # Iterate over sorted results.
-    sortby = SortBy([SortProperty('dc:title', 'ASC')])
+    sortby = SortBy([SortProperty("dc:title", "ASC")])
     csw_records = {}
     startposition = 0
-    nextrecord = getattr(csw, 'results', 1)
+    nextrecord = getattr(csw, "results", 1)
     while nextrecord != 0:
-        csw.getrecords2(constraints=filter_list, startposition=startposition,
-                        maxrecords=pagesize, sortby=sortby)
+        csw.getrecords2(
+            constraints=filter_list,
+            startposition=startposition,
+            maxrecords=pagesize,
+            sortby=sortby,
+        )
         csw_records.update(csw.records)
-        if csw.results['nextrecord'] == 0:
+        if csw.results["nextrecord"] == 0:
             break
         startposition += pagesize + 1  # Last one is included.
         if startposition >= maxrecords:
@@ -147,16 +154,15 @@ In&nbsp;[5]:
 ```python
 from owslib.csw import CatalogueServiceWeb
 
-
-endpoint = 'https://data.ioos.us/csw'
+endpoint = "https://data.ioos.us/csw"
 
 csw = CatalogueServiceWeb(endpoint, timeout=60)
 get_csw_records(csw, filter_list, pagesize=10, maxrecords=1000)
 
-records = '\n'.join(csw.records.keys())
-print('Found {} records.\n'.format(len(csw.records.keys())))
+records = "\n".join(csw.records.keys())
+print("Found {} records.\n".format(len(csw.records.keys())))
 for key, value in list(csw.records.items()):
-    print('[{}]: {}'.format(value.title, key))
+    print("[{}]: {}".format(value.title, key))
 ```
 <div class="output_area"><div class="prompt"></div>
 <pre>
@@ -182,7 +188,7 @@ In&nbsp;[6]:
 
 ```python
 value = csw.records[
-    'HFR/USWC/6km/hourly/RTV/HFRADAR_US_West_Coast_6km_Resolution_Hourly_RTV_best.ncd'
+    "HFR/USWC/6km/hourly/RTV/HFRADAR_US_West_Coast_6km_Resolution_Hourly_RTV_best.ncd"
 ]
 
 print(value.abstract)
@@ -208,7 +214,7 @@ In&nbsp;[7]:
 </div>
 
 ```python
-attrs = [attr for attr in dir(value) if not attr.startswith('_')]
+attrs = [attr for attr in dir(value) if not attr.startswith("_")]
 nonzero = [attr for attr in attrs if getattr(value, attr)]
 nonzero
 ```
@@ -297,12 +303,11 @@ In&nbsp;[11]:
 ```python
 from geolinks import sniff_link
 
-
-msg = 'geolink: {geolink}\nscheme: {scheme}\nURL: {url}\n'.format
+msg = "geolink: {geolink}\nscheme: {scheme}\nURL: {url}\n".format
 for ref in value.references:
-    if ref['scheme'] == 'OPeNDAP:OPeNDAP':
-        url = ref['url']
-    print(msg(geolink=sniff_link(ref['url']), **ref))
+    if ref["scheme"] == "OPeNDAP:OPeNDAP":
+        url = ref["url"]
+    print(msg(geolink=sniff_link(ref["url"]), **ref))
 ```
 <div class="output_area"><div class="prompt"></div>
 <pre>
@@ -425,12 +430,12 @@ In&nbsp;[14]:
 ```python
 import numpy.ma as ma
 
-u = ds['u'].data
-v = ds['v'].data
+u = ds["u"].data
+v = ds["v"].data
 
-lon = ds.coords['lon'].data
-lat = ds.coords['lat'].data
-time = ds.coords['time'].data
+lon = ds.coords["lon"].data
+lat = ds.coords["lat"].data
+time = ds.coords["time"].data
 
 u = ma.masked_invalid(u)
 v = ma.masked_invalid(v)
@@ -446,8 +451,7 @@ In&nbsp;[15]:
 
 ```python
 import numpy as np
-from oceans.ocfis import uv2spdir, spdir2uv
-
+from oceans.ocfis import spdir2uv, uv2spdir
 
 angle, speed = uv2spdir(u, v)
 us, vs = spdir2uv(np.ones_like(speed), angle, deg=True)
@@ -464,15 +468,11 @@ In&nbsp;[16]:
 
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
-
 from cartopy import feature
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-
+from cartopy.mpl.gridliner import LATITUDE_FORMATTER, LONGITUDE_FORMATTER
 
 LAND = feature.NaturalEarthFeature(
-    'physical', 'land', '10m',
-    edgecolor='face',
-    facecolor='lightgray'
+    "physical", "land", "10m", edgecolor="face", facecolor="lightgray"
 )
 
 sub = 2
@@ -481,9 +481,7 @@ center = -122.416667, 37.783333  # San Francisco.
 bbox = lon.min(), lon.max(), lat.min(), lat.max()
 
 fig, (ax0, ax1) = plt.subplots(
-    ncols=2,
-    figsize=(20, 20),
-    subplot_kw=dict(projection=ccrs.PlateCarree())
+    ncols=2, figsize=(20, 20), subplot_kw=dict(projection=ccrs.PlateCarree())
 )
 
 
@@ -494,25 +492,32 @@ gl.xlabels_top = gl.ylabels_right = False
 gl.xformatter = LONGITUDE_FORMATTER
 gl.yformatter = LATITUDE_FORMATTER
 
-cbar = fig.colorbar(cs, ax=ax0, shrink=0.45, extend='both')
-cbar.ax.set_title(r'speed m s$^{-1}$', loc='left')
+cbar = fig.colorbar(cs, ax=ax0, shrink=0.45, extend="both")
+cbar.ax.set_title(r"speed m s$^{-1}$", loc="left")
 
-ax0.add_feature(LAND, zorder=0, edgecolor='black')
-ax0.set_title('{}\n{}'.format(value.title, ds['time'].values))
+ax0.add_feature(LAND, zorder=0, edgecolor="black")
+ax0.set_title("{}\n{}".format(value.title, ds["time"].values))
 
-ax1.set_extent([center[0]-dx-dx, center[0]+dx, center[1]-dy, center[1]+dy])
-q = ax1.quiver(lon[::sub], lat[::sub],
-               us[::sub, ::sub], vs[::sub, ::sub],
-               speed[::sub, ::sub], scale=30)
-ax1.quiverkey(q, 0.5, 0.85, 1, r'1 m s$^{-1}$', coordinates='axes')
+ax1.set_extent([center[0] - dx - dx, center[0] + dx, center[1] - dy, center[1] + dy])
+q = ax1.quiver(
+    lon[::sub],
+    lat[::sub],
+    us[::sub, ::sub],
+    vs[::sub, ::sub],
+    speed[::sub, ::sub],
+    scale=30,
+)
+ax1.quiverkey(q, 0.5, 0.85, 1, r"1 m s$^{-1}$", coordinates="axes")
 gl = ax1.gridlines(draw_labels=True)
 gl.xlabels_top = gl.ylabels_right = False
 gl.xformatter = LONGITUDE_FORMATTER
 gl.yformatter = LATITUDE_FORMATTER
 
-ax1.add_feature(LAND, zorder=0, edgecolor='black')
-ax1.plot(ds['site_lon'], ds['site_lat'], marker='o', linestyle='none', color='darkorange')
-ax1.set_title('San Francisco Bay area');
+ax1.add_feature(LAND, zorder=0, edgecolor="black")
+ax1.plot(
+    ds["site_lon"], ds["site_lat"], marker="o", linestyle="none", color="darkorange"
+)
+ax1.set_title("San Francisco Bay area")
 ```
 
 

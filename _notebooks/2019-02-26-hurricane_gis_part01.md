@@ -31,35 +31,34 @@ In&nbsp;[1]:
 ```python
 import os
 from pathlib import Path
+
 import geopandas
 import pandas as pd
 
 
-def load_best_track(code='al14', year='2018'):
-    fname = Path(f'{code}{year}_best_track.zip')
+def load_best_track(code="al14", year="2018"):
+    fname = Path(f"{code}{year}_best_track.zip")
 
     if not fname.is_file():
         import urllib.request
-        url = f'https://www.nhc.noaa.gov/gis/best_track/{fname}'
+
+        url = f"https://www.nhc.noaa.gov/gis/best_track/{fname}"
         urllib.request.urlretrieve(url, fname)
 
-    os.environ['CPL_ZIP_ENCODING'] = 'UTF-8'
+    os.environ["CPL_ZIP_ENCODING"] = "UTF-8"
 
     radii = geopandas.read_file(
-        f'/{code.upper()}{year}_radii.shp',
-        vfs=f'zip://{fname}')
+        f"/{code.upper()}{year}_radii.shp", vfs=f"zip://{fname}"
+    )
 
-    pts = geopandas.read_file(
-        f'/{code.upper()}{year}_pts.shp',
-        vfs=f'zip://{fname}')
+    pts = geopandas.read_file(f"/{code.upper()}{year}_pts.shp", vfs=f"zip://{fname}")
 
-    pts['str'] = pts['DTG'].astype(int).astype(str)
+    pts["str"] = pts["DTG"].astype(int).astype(str)
 
-    pts.index = pd.to_datetime(
-        pts['str'], format='%Y%m%d%H', errors='coerce').values
+    pts.index = pd.to_datetime(pts["str"], format="%Y%m%d%H", errors="coerce").values
 
     radii.index = pd.to_datetime(
-        radii['SYNOPTIME'], format='%Y%m%d%H', errors='coerce'
+        radii["SYNOPTIME"], format="%Y%m%d%H", errors="coerce"
     ).values
     return radii, pts
 ```
@@ -71,11 +70,11 @@ In&nbsp;[2]:
 </div>
 
 ```python
-radii, pts = load_best_track(code='al14', year='2018')
+radii, pts = load_best_track(code="al14", year="2018")
 
 start = radii.index[0]
 stop = radii.index[-1]
-bbox = radii['geometry'].total_bounds
+bbox = radii["geometry"].total_bounds
 ```
 
 The only two pieces of information that will not come from the GIS file are
@@ -88,9 +87,9 @@ In&nbsp;[3]:
 </div>
 
 ```python
-variable = 'water_surface_height_above_reference_datum'
+variable = "water_surface_height_above_reference_datum"
 
-buoy = '8728690'
+buoy = "8728690"
 ```
 
 For the sake of better understanding the SOS service we will create the data endpoint "by hand."
@@ -102,16 +101,16 @@ In&nbsp;[4]:
 
 ```python
 url = (
-    'https://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?'
-    'service=SOS'
-    '&request=GetObservation'
-    '&version=1.0.0'
-    f'&observedProperty={variable}'
-    f'&offering=urn:ioos:station:NOAA.NOS.CO-OPS:{buoy}'
-    '&responseFormat=text/csv'
-    f'&eventTime={start:%Y-%m-%dT%H:%M:%SZ}/{stop:%Y-%m-%dT%H:%M:%SZ}'
-    '&result=VerticalDatum==urn:ogc:def:datum:epsg::5103'
-    '&dataType=PreliminarySixMinute'
+    "https://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?"
+    "service=SOS"
+    "&request=GetObservation"
+    "&version=1.0.0"
+    f"&observedProperty={variable}"
+    f"&offering=urn:ioos:station:NOAA.NOS.CO-OPS:{buoy}"
+    "&responseFormat=text/csv"
+    f"&eventTime={start:%Y-%m-%dT%H:%M:%SZ}/{stop:%Y-%m-%dT%H:%M:%SZ}"
+    "&result=VerticalDatum==urn:ogc:def:datum:epsg::5103"
+    "&dataType=PreliminarySixMinute"
 )
 
 print(url)
@@ -129,11 +128,7 @@ In&nbsp;[5]:
 </div>
 
 ```python
-df = pd.read_csv(
-    url,
-    index_col='date_time',
-    parse_dates=True
-)
+df = pd.read_csv(url, index_col="date_time", parse_dates=True)
 
 df.head()
 ```
@@ -262,9 +257,7 @@ In&nbsp;[6]:
 def extract_metadata(col):
     value = col.unique()
     if len(value) > 1:
-        raise ValueError(
-            f'Expected a single value but got {len(value)}'
-        )
+        raise ValueError(f"Expected a single value but got {len(value)}")
     return value.squeeze().tolist()
 ```
 
@@ -275,15 +268,11 @@ In&nbsp;[7]:
 ```python
 import hvplot.pandas  # noqa
 
-
 col = df.columns[df.columns.str.startswith(variable)]
-sensor_id = extract_metadata(df['sensor_id'])
+sensor_id = extract_metadata(df["sensor_id"])
 
 df[col].hvplot.line(
-    figsize=(9, 2.75),
-    legend=False,
-    grid=True,
-    title=sensor_id,
+    figsize=(9, 2.75), legend=False, grid=True, title=sensor_id,
 )
 ```
 
@@ -428,8 +417,8 @@ In&nbsp;[8]:
 ```python
 idxmax = df[col].idxmax().squeeze()
 
-dedup = radii.loc[~radii.index.duplicated(keep='first')]
-overlap = dedup.iloc[dedup.index.get_loc(idxmax, method='nearest')]
+dedup = radii.loc[~radii.index.duplicated(keep="first")]
+overlap = dedup.iloc[dedup.index.get_loc(idxmax, method="nearest")]
 ```
 
 <div class="prompt input_prompt">
@@ -440,10 +429,9 @@ In&nbsp;[9]:
 import folium
 from folium.plugins import Fullscreen
 
-
 location = (
-    extract_metadata(df['latitude (degree)']),
-    extract_metadata(df['longitude (degree)'])
+    extract_metadata(df["latitude (degree)"]),
+    extract_metadata(df["longitude (degree)"]),
 )
 
 m = folium.Map(location=location, zoom_start=5)
@@ -451,15 +439,13 @@ Fullscreen().add_to(m)
 
 folium.Marker(location=location, popup=sensor_id).add_to(m)
 
-for geom in radii['geometry']:
+for geom in radii["geometry"]:
     folium.GeoJson(geom.__geo_interface__).add_to(m)
 
-style_function = lambda feature: {'fillColor': '#FF5733',
-                                  'opacity': '0.15'}
+style_function = lambda feature: {"fillColor": "#FF5733", "opacity": "0.15"}
 
 folium.GeoJson(
-    overlap['geometry'].__geo_interface__,
-    style_function=style_function
+    overlap["geometry"].__geo_interface__, style_function=style_function
 ).add_to(m)
 
 m

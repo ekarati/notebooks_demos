@@ -21,20 +21,22 @@ In&nbsp;[1]:
 from IPython.display import HTML
 
 url = (
-    'https://cordc.ucsd.edu/projects/mapping/maps/fullpage.php?'
-    'll=29.061888,-87.373643&'
-    'zm=7&'
-    'mt=&'
-    'rng=0.00,50.00&'
-    'us=1&'
-    'cs=4&'
-    'res=6km_h&'
-    'ol=3&'
-    'cp=1'
+    "https://cordc.ucsd.edu/projects/mapping/maps/fullpage.php?"
+    "ll=29.061888,-87.373643&"
+    "zm=7&"
+    "mt=&"
+    "rng=0.00,50.00&"
+    "us=1&"
+    "cs=4&"
+    "res=6km_h&"
+    "ol=3&"
+    "cp=1"
 )
 
 
-iframe = '<iframe src="{src}" width="750" height="450" style="border:none;"></iframe>'.format
+iframe = (
+    '<iframe src="{src}" width="750" height="450" style="border:none;"></iframe>'.format
+)
 
 HTML(iframe(src=url))
 ```
@@ -65,10 +67,9 @@ In&nbsp;[2]:
 ```python
 import xarray as xr
 
-
 url = (
-    'http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USEGC/6km/hourly/RTV/'
-    'HFRADAR_US_East_and_Gulf_Coast_6km_Resolution_Hourly_RTV_best.ncd'
+    "http://hfrnet-tds.ucsd.edu/thredds/dodsC/HFR/USEGC/6km/hourly/RTV/"
+    "HFRADAR_US_East_and_Gulf_Coast_6km_Resolution_Hourly_RTV_best.ncd"
 )
 
 ds = xr.open_dataset(url)
@@ -137,7 +138,7 @@ In&nbsp;[3]:
 dx = dy = 2.25  # Area around the point of interest.
 center = -87.373643, 29.061888  # Point of interest.
 
-dsw = ds.sel(time=slice('2017-07-20', '2017-07-27'))
+dsw = ds.sel(time=slice("2017-07-20", "2017-07-27"))
 ```
 
 <div class="prompt input_prompt">
@@ -146,8 +147,8 @@ In&nbsp;[4]:
 
 ```python
 dsw = dsw.sel(
-    lon=(dsw.lon < center[0]+dx) & (dsw.lon > center[0]-dx),
-    lat=(dsw.lat < center[1]+dy) & (dsw.lat > center[1]-dy),
+    lon=(dsw.lon < center[0] + dx) & (dsw.lon > center[0] - dx),
+    lat=(dsw.lat < center[1] + dy) & (dsw.lat > center[1] - dy),
 )
 ```
 
@@ -158,8 +159,8 @@ In&nbsp;[5]:
 </div>
 
 ```python
-resampled = dsw.resample(indexer={'time': '1H'})
-avg = resampled.mean(dim='time')
+resampled = dsw.resample(indexer={"time": "1H"})
+avg = resampled.mean(dim="time")
 ```
 <div class="warning" style="border:thin solid red">
     /home/filipe/miniconda3/envs/IOOS/lib/python3.6/site-
@@ -176,9 +177,9 @@ In&nbsp;[6]:
 ```python
 import numpy.ma as ma
 
-v = avg['v'].data
-u = avg['u'].data
-time = avg['time'].to_index().to_pydatetime()
+v = avg["v"].data
+u = avg["u"].data
+time = avg["time"].to_index().to_pydatetime()
 
 u = ma.masked_invalid(u)
 v = ma.masked_invalid(v)
@@ -191,8 +192,8 @@ In&nbsp;[7]:
 ```python
 i, j, k = u.shape
 
-u = u.reshape(i, j*k).mean(axis=1)
-v = v.reshape(i, j*k).mean(axis=1)
+u = u.reshape(i, j * k).mean(axis=1)
+v = v.reshape(i, j * k).mean(axis=1)
 ```
 
 <div class="prompt input_prompt">
@@ -209,9 +210,15 @@ fig, ax = plt.subplots(figsize=(11, 2.75))
 q = stick_plot(time, u, v, ax=ax)
 
 ref = 0.5
-qk = plt.quiverkey(q, 0.1, 0.85, ref,
-                   '{} {}'.format(ref, ds['u'].units),
-                   labelpos='N', coordinates='axes')
+qk = plt.quiverkey(
+    q,
+    0.1,
+    0.85,
+    ref,
+    "{} {}".format(ref, ds["u"].units),
+    labelpos="N",
+    coordinates="axes",
+)
 
 _ = plt.xticks(rotation=70)
 ```
@@ -230,7 +237,6 @@ In&nbsp;[9]:
 ```python
 from datetime import date, timedelta
 
-
 yesterday = date.today() - timedelta(days=1)
 
 dsy = ds.sel(time=yesterday)
@@ -243,12 +249,12 @@ In&nbsp;[10]:
 </div>
 
 ```python
-u = dsy['u'].data
-v = dsy['v'].data
+u = dsy["u"].data
+v = dsy["v"].data
 
-lon = dsy.coords['lon'].data
-lat = dsy.coords['lat'].data
-time = dsy.coords['time'].data
+lon = dsy.coords["lon"].data
+lat = dsy.coords["lat"].data
+time = dsy.coords["time"].data
 ```
 
 The cell below computes the speed from the velocity. We can use the speed computation to color code the vectors. Note that we re-create the vector velocity preserving the direction but using intensity of `1`. (The same visualization technique used in the HF radar DAC.)
@@ -259,8 +265,7 @@ In&nbsp;[11]:
 
 ```python
 import numpy as np
-from oceans.ocfis import uv2spdir, spdir2uv
-
+from oceans.ocfis import spdir2uv, uv2spdir
 
 angle, speed = uv2spdir(u, v)
 us, vs = spdir2uv(np.ones_like(speed), angle, deg=True)
@@ -274,42 +279,34 @@ In&nbsp;[12]:
 
 ```python
 import cartopy.crs as ccrs
-
 from cartopy import feature
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+from cartopy.mpl.gridliner import LATITUDE_FORMATTER, LONGITUDE_FORMATTER
 
 LAND = feature.NaturalEarthFeature(
-    'physical', 'land', '10m',
-    edgecolor='face',
-    facecolor='lightgray'
+    "physical", "land", "10m", edgecolor="face", facecolor="lightgray"
 )
 
 sub = 2
 bbox = lon.min(), lon.max(), lat.min(), lat.max()
 
-fig, ax = plt.subplots(
-    figsize=(9, 9),
-    subplot_kw=dict(projection=ccrs.PlateCarree())
-)
+fig, ax = plt.subplots(figsize=(9, 9), subplot_kw=dict(projection=ccrs.PlateCarree()))
 
 
-ax.set_extent([center[0]-dx-dx, center[0]+dx, center[1]-dy, center[1]+dy])
+ax.set_extent([center[0] - dx - dx, center[0] + dx, center[1] - dy, center[1] + dy])
 vmin, vmax = np.nanmin(speed[::sub, ::sub]), np.nanmax(speed[::sub, ::sub])
 speed_clipped = np.clip(speed[::sub, ::sub], 0, 0.65)
 ax.quiver(
-    lon[::sub], lat[::sub],
-    us[::sub, ::sub], vs[::sub, ::sub],
-    speed_clipped, scale=30,
+    lon[::sub], lat[::sub], us[::sub, ::sub], vs[::sub, ::sub], speed_clipped, scale=30,
 )
 
 # Deepwater Horizon site.
-ax.plot(-88.365997, 28.736628, marker='o', color='crimson')
+ax.plot(-88.365997, 28.736628, marker="o", color="crimson")
 gl = ax.gridlines(draw_labels=True)
 gl.xlabels_top = gl.ylabels_right = False
 gl.xformatter = LONGITUDE_FORMATTER
 gl.yformatter = LATITUDE_FORMATTER
 
-feature = ax.add_feature(LAND, zorder=0, edgecolor='black')
+feature = ax.add_feature(LAND, zorder=0, edgecolor="black")
 ```
 
 

@@ -39,11 +39,11 @@ In&nbsp;[2]:
 ```python
 import cf_units
 
-units = cf_units.Unit('meters')
+units = cf_units.Unit("meters")
 
 bbox = [-87.40, 24.25, -74.70, 36.70]
 
-sos_name = 'water_surface_height_above_reference_datum'
+sos_name = "water_surface_height_above_reference_datum"
 ```
 
 In this example we will use only the `CoopsSos`,
@@ -80,8 +80,8 @@ In&nbsp;[4]:
 ofrs = collector.server.offerings
 title = collector.server.identification.title
 
-print('Collector offerings')
-print('{}: {} offerings'.format(title, len(ofrs)))
+print("Collector offerings")
+print("{}: {} offerings".format(title, len(ofrs)))
 ```
 <div class="output_area"><div class="prompt"></div>
 <pre>
@@ -106,28 +106,25 @@ In&nbsp;[5]:
 import pandas as pd
 from ioos_tools.ioos import collector2table
 
-config = dict(
-    units=units,
-    sos_name=sos_name,
-)
+config = dict(units=units, sos_name=sos_name,)
 
 data = collector2table(
     collector=collector,
     config=config,
-    col='water_surface_height_above_reference_datum (m)'
+    col="water_surface_height_above_reference_datum (m)",
 )
 
 # Clean the table.
 table = dict(
-    station_name=[s._metadata.get('station_name') for s in data],
-    station_code=[s._metadata.get('station_code') for s in data],
-    sensor=[s._metadata.get('sensor') for s in data],
-    lon=[s._metadata.get('lon') for s in data],
-    lat=[s._metadata.get('lat') for s in data],
-    depth=[s._metadata.get('depth') for s in data],
+    station_name=[s._metadata.get("station_name") for s in data],
+    station_code=[s._metadata.get("station_code") for s in data],
+    sensor=[s._metadata.get("sensor") for s in data],
+    lon=[s._metadata.get("lon") for s in data],
+    lat=[s._metadata.get("lat") for s in data],
+    depth=[s._metadata.get("depth") for s in data],
 )
 
-table = pd.DataFrame(table).set_index('station_name')
+table = pd.DataFrame(table).set_index("station_name")
 
 table
 ```
@@ -438,18 +435,20 @@ In&nbsp;[6]:
 </div>
 
 ```python
-index = pd.date_range(start=start_time.replace(tzinfo=None),
-                      end=end_time.replace(tzinfo=None),
-                      freq='15min')
+index = pd.date_range(
+    start=start_time.replace(tzinfo=None),
+    end=end_time.replace(tzinfo=None),
+    freq="15min",
+)
 
 # Re-index and rename series.
 observations = []
 for series in data:
     _metadata = series._metadata
     series.index = series.index.tz_localize(None)
-    obs = series.reindex(index=index, limit=1, method='nearest')
+    obs = series.reindex(index=index, limit=1, method="nearest")
     obs._metadata = _metadata
-    obs.name = _metadata['station_name']
+    obs.name = _metadata["station_name"]
     observations.append(obs)
 ```
 
@@ -1531,12 +1530,12 @@ In&nbsp;[10]:
 import matplotlib
 import matplotlib.pyplot as plt
 
-with matplotlib.style.context(['seaborn-notebook', 'seaborn-darkgrid']):
-    fix, axes = plt.subplots(nrows=5, sharex=True, sharey=True, figsize=(11, 2.25*5))
+with matplotlib.style.context(["seaborn-notebook", "seaborn-darkgrid"]):
+    fix, axes = plt.subplots(nrows=5, sharex=True, sharey=True, figsize=(11, 2.25 * 5))
 
     for k, obs in enumerate(observations[:5]):
         axes[k].plot(obs.index, obs.values)
-        axes[k].text(obs.index[20], 0, obs._metadata['station_name'])
+        axes[k].text(obs.index[20], 0, obs._metadata["station_name"])
 ```
 
 
@@ -2878,10 +2877,9 @@ In&nbsp;[11]:
 </div>
 
 ```python
-from bokeh.resources import CDN
-from bokeh.plotting import figure
 from bokeh.embed import file_html
-
+from bokeh.plotting import figure
+from bokeh.resources import CDN
 from folium import IFrame
 
 # Plot defaults.
@@ -2890,31 +2888,31 @@ width, height = 750, 250
 
 
 def make_plot(series):
-    p = figure(toolbar_location="above",
-               x_axis_type="datetime",
-               width=width,
-               height=height,
-               tools=tools,
-               title=series.name)
+    p = figure(
+        toolbar_location="above",
+        x_axis_type="datetime",
+        width=width,
+        height=height,
+        tools=tools,
+        title=series.name,
+    )
     line = p.line(
         x=series.index,
         y=series.values,
         line_width=5,
-        line_cap='round',
-        line_join='round'
+        line_cap="round",
+        line_join="round",
     )
     return p, line
 
 
 def make_marker(p, location, fname):
     html = file_html(p, CDN, fname)
-    iframe = IFrame(html, width=width+45, height=height+80)
+    iframe = IFrame(html, width=width + 45, height=height + 80)
 
     popup = folium.Popup(iframe, max_width=2650)
-    icon = folium.Icon(color='green', icon='stats')
-    marker = folium.Marker(location=location,
-                           popup=popup,
-                           icon=icon)
+    icon = folium.Icon(color="green", icon="stats")
+    marker = folium.Marker(location=location, popup=popup, icon=icon)
     return marker
 ```
 
@@ -2925,14 +2923,14 @@ In&nbsp;[12]:
 ```python
 import folium
 
-lon = (bbox[0]+bbox[2])/2
-lat = (bbox[1]+bbox[3])/2
+lon = (bbox[0] + bbox[2]) / 2
+lat = (bbox[1] + bbox[3]) / 2
 
-m = folium.Map(location=[lat, lon], tiles='OpenStreetMap', zoom_start=5)
+m = folium.Map(location=[lat, lon], tiles="OpenStreetMap", zoom_start=5)
 
 for obs in observations:
-    fname = obs._metadata['station_code']
-    location = obs._metadata['lat'], obs._metadata['lon']
+    fname = obs._metadata["station_code"]
+    location = obs._metadata["lat"], obs._metadata["lon"]
     p, _ = make_plot(obs)
     marker = make_marker(p, location=location, fname=fname)
     marker.add_to(m)

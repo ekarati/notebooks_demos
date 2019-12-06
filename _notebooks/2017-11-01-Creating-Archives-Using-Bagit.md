@@ -16,12 +16,12 @@ In&nbsp;[1]:
 
 ```python
 import os
+
 import pandas as pd
 
+fname = os.path.join("data", "dsg", "timeseriesProfile.csv")
 
-fname = os.path.join('data', 'dsg', 'timeseriesProfile.csv')
-
-df = pd.read_csv(fname, parse_dates=['time'])
+df = pd.read_csv(fname, parse_dates=["time"])
 df.head()
 ```
 
@@ -121,12 +121,7 @@ In&nbsp;[2]:
 </div>
 
 ```python
-axes = {
-    't': 'time',
-    'x': 'lon',
-    'y': 'lat',
-    'z': 'depth'
-}
+axes = {"t": "time", "x": "lon", "y": "lat", "z": "depth"}
 ```
 
 Now we can create a [Orthogonal Multidimensional Timeseries Profile](http://cfconventions.org/cf-conventions/v1.6.0/cf-conventions.html#_orthogonal_multidimensional_array_representation_of_time_series) object...
@@ -138,17 +133,13 @@ In&nbsp;[3]:
 ```python
 import os
 import tempfile
+
 from pocean.dsg import OrthogonalMultidimensionalTimeseriesProfile as omtsp
 
 output_fp, output = tempfile.mkstemp()
 os.close(output_fp)
 
-ncd = omtsp.from_dataframe(
-    df.reset_index(),
-    output=output,
-    axes=axes,
-    mode='a'
-)
+ncd = omtsp.from_dataframe(df.reset_index(), output=output, axes=axes, mode="a")
 ```
 
 ... And add some extra metadata before we close the file.
@@ -158,8 +149,8 @@ In&nbsp;[4]:
 </div>
 
 ```python
-naming_authority = 'ioos'
-st_id = 'Station1'
+naming_authority = "ioos"
+st_id = "Station1"
 
 ncd.naming_authority = naming_authority
 ncd.id = st_id
@@ -191,7 +182,7 @@ In&nbsp;[5]:
 
 ```python
 temp_bagit_folder = tempfile.mkdtemp()
-temp_data_folder = os.path.join(temp_bagit_folder, 'data')
+temp_data_folder = os.path.join(temp_bagit_folder, "data")
 ```
 
 Now we can create the bag and copy the netCDF file to a `data` sub-folder.
@@ -201,15 +192,13 @@ In&nbsp;[6]:
 </div>
 
 ```python
-import bagit
 import shutil
 
-bag = bagit.make_bag(
-    temp_bagit_folder,
-    checksum=['sha256']
-)
+import bagit
 
-shutil.copy2(output, temp_data_folder + '/parameter1.nc')
+bag = bagit.make_bag(temp_bagit_folder, checksum=["sha256"])
+
+shutil.copy2(output, temp_data_folder + "/parameter1.nc")
 ```
 
 
@@ -226,26 +215,22 @@ In&nbsp;[7]:
 </div>
 
 ```python
-urn = 'urn:ioos:station:{naming_authority}:{st_id}'.format(
-    naming_authority=naming_authority,
-    st_id=st_id
+urn = "urn:ioos:station:{naming_authority}:{st_id}".format(
+    naming_authority=naming_authority, st_id=st_id
 )
 
 bag_meta = {
-    'Bag-Count': '1 of 1',
-    'Bag-Group-Identifier': 'ioos_bagit_testing',
-    'Contact-Name': 'Kyle Wilcox',
-    'Contact-Phone': '907-230-0304',
-    'Contact-Email': 'axiom+ncei@axiomdatascience.com',
-    'External-Identifier': urn,
-    'External-Description':
-        'Sensor data from station {}'.format(urn),
-    'Internal-Sender-Identifier': urn,
-    'Internal-Sender-Description':
-        'Station - URN:{}'.format(urn),
-    'Organization-address':
-        '1016 W 6th Ave, Ste. 105, Anchorage, AK 99501, USA',
-    'Source-Organization': 'Axiom Data Science',
+    "Bag-Count": "1 of 1",
+    "Bag-Group-Identifier": "ioos_bagit_testing",
+    "Contact-Name": "Kyle Wilcox",
+    "Contact-Phone": "907-230-0304",
+    "Contact-Email": "axiom+ncei@axiomdatascience.com",
+    "External-Identifier": urn,
+    "External-Description": "Sensor data from station {}".format(urn),
+    "Internal-Sender-Identifier": urn,
+    "Internal-Sender-Description": "Station - URN:{}".format(urn),
+    "Organization-address": "1016 W 6th Ave, Ste. 105, Anchorage, AK 99501, USA",
+    "Source-Organization": "Axiom Data Science",
 }
 
 
@@ -289,9 +274,9 @@ In&nbsp;[9]:
 </div>
 
 ```python
-shutil.copy2(output, temp_data_folder + '/parameter2.nc')
-shutil.copy2(output, temp_data_folder + '/parameter3.nc')
-shutil.copy2(output, temp_data_folder + '/parameter4.nc')
+shutil.copy2(output, temp_data_folder + "/parameter2.nc")
+shutil.copy2(output, temp_data_folder + "/parameter3.nc")
+shutil.copy2(output, temp_data_folder + "/parameter4.nc")
 
 bag.save(manifests=True, processes=4)
 ```

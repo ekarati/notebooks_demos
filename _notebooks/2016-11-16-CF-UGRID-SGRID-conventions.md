@@ -34,7 +34,7 @@ import iris
 
 iris.FUTURE.netcdf_promote = True
 
-url = 'http://tds.marine.rutgers.edu/thredds/dodsC/roms/espresso/2013_da/his/ESPRESSO_Real-Time_v2_History_fmrc.ncd'
+url = "http://tds.marine.rutgers.edu/thredds/dodsC/roms/espresso/2013_da/his/ESPRESSO_Real-Time_v2_History_fmrc.ncd"
 
 cubes = iris.load(url)
 ```
@@ -230,7 +230,7 @@ In&nbsp;[3]:
 </div>
 
 ```python
-cube = cubes.extract_strict('sea_surface_height')
+cube = cubes.extract_strict("sea_surface_height")
 
 print(cube)
 ```
@@ -305,7 +305,7 @@ In&nbsp;[4]:
 </div>
 
 ```python
-temp = cubes.extract_strict('sea_water_potential_temperature')
+temp = cubes.extract_strict("sea_water_potential_temperature")
 
 print(temp)
 ```
@@ -385,7 +385,7 @@ In&nbsp;[5]:
 </div>
 
 ```python
-temp = cubes.extract_strict('sea_water_potential_temperature')
+temp = cubes.extract_strict("sea_water_potential_temperature")
 
 # Surface at the last time step.
 T = temp[-1, -1, -1, ...]
@@ -399,7 +399,7 @@ In&nbsp;[6]:
 </div>
 
 ```python
-t_profile.coords(axis='Z')
+t_profile.coords(axis="Z")
 ```
 
 
@@ -450,7 +450,6 @@ In&nbsp;[7]:
 import matplotlib.pyplot as plt
 import numpy.ma as ma
 
-
 T.data = ma.masked_invalid(T.data)
 
 fig, ax = plt.subplots()
@@ -472,8 +471,7 @@ In&nbsp;[8]:
 ```python
 import iris.plot as qplt
 
-
-qplt.plot(t_profile);
+qplt.plot(t_profile)
 ```
 
 
@@ -495,9 +493,9 @@ In&nbsp;[9]:
 fig, ax = plt.subplots(figsize=(3, 7))
 
 t = t_profile.data
-z = t_profile.coord('sea_surface_height_above_reference_ellipsoid').points
+z = t_profile.coord("sea_surface_height_above_reference_ellipsoid").points
 
-ax.plot(t, z);
+ax.plot(t, z)
 ```
 
 
@@ -520,8 +518,7 @@ In&nbsp;[10]:
 ```python
 import pyugrid
 
-
-url = 'http://www.smast.umassd.edu:8080/thredds/dodsC/FVCOM/NECOFS/Forecasts/NECOFS_GOM3_FORECAST.nc'
+url = "http://www.smast.umassd.edu:8080/thredds/dodsC/FVCOM/NECOFS/Forecasts/NECOFS_GOM3_FORECAST.nc"
 ugrid = pyugrid.UGrid.from_ncfile(url)
 ```
 
@@ -555,13 +552,12 @@ In&nbsp;[13]:
 
 ```python
 import cartopy.crs as ccrs
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+from cartopy.mpl.gridliner import LATITUDE_FORMATTER, LONGITUDE_FORMATTER
 
 
 def make_map(projection=ccrs.PlateCarree()):
-    fig, ax = plt.subplots(figsize=(8, 6),
-                           subplot_kw=dict(projection=projection))
-    ax.coastlines(resolution='50m')
+    fig, ax = plt.subplots(figsize=(8, 6), subplot_kw=dict(projection=projection))
+    ax.coastlines(resolution="50m")
     gl = ax.gridlines(draw_labels=True)
     gl.xlabels_top = gl.ylabels_right = False
     gl.xformatter = LONGITUDE_FORMATTER
@@ -571,9 +567,9 @@ def make_map(projection=ccrs.PlateCarree()):
 
 fig, ax = make_map()
 
-kw = {'marker': '.', 'linestyle': '-', 'alpha': 0.25, 'color': 'darkgray'}
+kw = {"marker": ".", "linestyle": "-", "alpha": 0.25, "color": "darkgray"}
 ax.triplot(lon, lat, triangles, **kw)
-ax.coastlines();
+ax.coastlines()
 ```
 
 
@@ -601,8 +597,7 @@ In&nbsp;[14]:
 ```python
 import pysgrid
 
-
-url = 'http://geoport.whoi.edu/thredds/dodsC/coawst_4/use/fmrc/coawst_4_use_best.ncd'
+url = "http://geoport.whoi.edu/thredds/dodsC/coawst_4/use/fmrc/coawst_4_use_best.ncd"
 sgrid = pysgrid.load_grid(url)
 ```
 
@@ -692,6 +687,11 @@ In&nbsp;[19]:
 ```python
 from netCDF4 import Dataset
 
+# Compute the speed.
+# **Rotate the grid.
+# Average at the center.
+from pysgrid.processing_2d import avg_to_cell_center, rotate_vectors, vector_sum
+
 nc = Dataset(url)
 u_velocity = nc.variables[u_var.variable]
 v_velocity = nc.variables[v_var.variable]
@@ -702,20 +702,14 @@ time_idx = -1  # Last time step.
 u = u_velocity[time_idx, v_idx, u_var.center_slicing[-2], u_var.center_slicing[-1]]
 v = v_velocity[time_idx, v_idx, v_var.center_slicing[-2], v_var.center_slicing[-1]]
 
-# Average at the center.
-from pysgrid.processing_2d import avg_to_cell_center
 
 u = avg_to_cell_center(u, u_var.center_axis)
 v = avg_to_cell_center(v, v_var.center_axis)
 
-# **Rotate the grid.
-from pysgrid.processing_2d import rotate_vectors
 
 angles = nc.variables[sgrid.angle.variable][sgrid.angle.center_slicing]
 u, v = rotate_vectors(u, v, angles)
 
-# Compute the speed.
-from pysgrid.processing_2d import vector_sum
 
 speed = vector_sum(u, v)
 ```
@@ -763,8 +757,7 @@ def is_monotonically_decreasing(arr, axis=0):
 
 
 def is_monotonic(arr):
-    return (is_monotonically_increasing(arr) or
-            is_monotonically_decreasing(arr))
+    return is_monotonically_increasing(arr) or is_monotonically_decreasing(arr)
 
 
 def extent_bounds(arr, bound_position=0.5, axis=0):
@@ -774,7 +767,11 @@ def extent_bounds(arr, bound_position=0.5, axis=0):
 
     x = arr.copy()
     x = np.c_[x[:, 0], (bound_position * (x[:, :-1] + x[:, 1:])), x[:, -1]]
-    x = np.r_[x[0, :][None, ...], (bound_position * (x[:-1, :] + x[1:, :])), x[-1, :][None, ...]]
+    x = np.r_[
+        x[0, :][None, ...],
+        (bound_position * (x[:-1, :] + x[1:, :])),
+        x[-1, :][None, ...],
+    ]
 
     return x
 ```
@@ -807,8 +804,7 @@ In&nbsp;[23]:
 
 ```python
 def make_map(projection=ccrs.PlateCarree(), figsize=(9, 9)):
-    fig, ax = plt.subplots(figsize=figsize,
-                           subplot_kw=dict(projection=projection))
+    fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(projection=projection))
     gl = ax.gridlines(draw_labels=True)
     gl.xlabels_top = gl.ylabels_right = False
     gl.xformatter = LONGITUDE_FORMATTER
@@ -825,12 +821,12 @@ scale = 0.06
 
 fig, ax = make_map()
 
-kw = dict(scale=1.0/scale, pivot='middle', width=0.003, color='black')
+kw = dict(scale=1.0 / scale, pivot="middle", width=0.003, color="black")
 q = plt.quiver(lon, lat, u, v, zorder=2, **kw)
 
 plt.pcolormesh(x, y, speed, zorder=1, cmap=plt.cm.rainbow)
 
-c = ax.coastlines('10m')
+c = ax.coastlines("10m")
 ax.set_extent([-73.5, -62.5, 38, 46])
 ```
 

@@ -16,7 +16,7 @@ In&nbsp;[1]:
 ```python
 from siphon.catalog import TDSCatalog
 
-catalog = TDSCatalog('https://thredds.cencoos.org/thredds/catalog.xml')
+catalog = TDSCatalog("https://thredds.cencoos.org/thredds/catalog.xml")
 
 
 info = """
@@ -27,10 +27,9 @@ Base THREDDS URL: {}
 Catalog name: {}
 Catalog URL: {}
 Metadata: {}
-""".format(catalog.base_tds_url,
-           catalog.catalog_name,
-           catalog.catalog_url,
-           catalog.metadata)
+""".format(
+    catalog.base_tds_url, catalog.catalog_name, catalog.catalog_url, catalog.metadata
+)
 
 print(info)
 ```
@@ -73,7 +72,7 @@ In&nbsp;[3]:
 </div>
 
 ```python
-print('\n'.join(catalog.datasets.keys()))
+print("\n".join(catalog.datasets.keys()))
 ```
 <div class="output_area"><div class="prompt"></div>
 <pre>
@@ -124,7 +123,7 @@ In&nbsp;[4]:
 </div>
 
 ```python
-print('\n'.join(catalog.catalog_refs.keys()))
+print("\n".join(catalog.catalog_refs.keys()))
 ```
 <div class="output_area"><div class="prompt"></div>
 <pre>
@@ -141,9 +140,9 @@ In&nbsp;[5]:
 </div>
 
 ```python
-ref = catalog.catalog_refs['Global']
+ref = catalog.catalog_refs["Global"]
 
-[value for value in dir(ref) if not value.startswith('__')]
+[value for value in dir(ref) if not value.startswith("__")]
 ```
 
 
@@ -163,9 +162,8 @@ Href: {}
 Name: {}
 Title: {}
 """.format(
-    ref.href,
-    ref.name,
-    ref.title)
+    ref.href, ref.name, ref.title
+)
 
 print(info)
 ```
@@ -204,7 +202,7 @@ In&nbsp;[8]:
 </div>
 
 ```python
-print('\n'.join(cat.datasets.keys()))
+print("\n".join(cat.datasets.keys()))
 ```
 <div class="output_area"><div class="prompt"></div>
 <pre>
@@ -233,7 +231,7 @@ In&nbsp;[9]:
 </div>
 
 ```python
-dataset = 'Global 1-km Sea Surface Temperature (G1SST)'
+dataset = "Global 1-km Sea Surface Temperature (G1SST)"
 
 ds = cat.datasets[dataset]
 
@@ -314,10 +312,11 @@ In&nbsp;[11]:
 ```python
 from IPython.display import HTML
 
+iframe = (
+    '<iframe src="{src}" width="800" height="550" style="border:none;"></iframe>'.format
+)
 
-iframe = '<iframe src="{src}" width="800" height="550" style="border:none;"></iframe>'.format
-
-url = 'https://thredds.cencoos.org/thredds/catalog.html?dataset=G1_SST_US_WEST_COAST'
+url = "https://thredds.cencoos.org/thredds/catalog.html?dataset=G1_SST_US_WEST_COAST"
 HTML(iframe(src=url))
 ```
 
@@ -335,7 +334,7 @@ In&nbsp;[12]:
 </div>
 
 ```python
-services = [service for service in catalog.services if service.name == 'wms']
+services = [service for service in catalog.services if service.name == "wms"]
 
 services
 ```
@@ -380,21 +379,22 @@ In&nbsp;[14]:
 ```python
 from owslib.wms import WebMapService
 
-
 if False:
     web_map_services = WebMapService(url)
-    layer = [key for key in web_map_services.contents.keys() if 'G1_SST_US_WEST_COAST' in key][0]
+    layer = [
+        key for key in web_map_services.contents.keys() if "G1_SST_US_WEST_COAST" in key
+    ][0]
     wms = web_map_services.contents[layer]
 
     title = wms.title
-    lon = (wms.boundingBox[0] + wms.boundingBox[2]) / 2.
-    lat = (wms.boundingBox[1] + wms.boundingBox[3]) / 2.
+    lon = (wms.boundingBox[0] + wms.boundingBox[2]) / 2.0
+    lat = (wms.boundingBox[1] + wms.boundingBox[3]) / 2.0
     time = wms.defaulttimeposition
 else:
-    layer = 'G1_SST_US_WEST_COAST/analysed_sst'
-    title = 'Sea Surface Temperature'
+    layer = "G1_SST_US_WEST_COAST/analysed_sst"
+    title = "Sea Surface Temperature"
     lon, lat = -122.50, 39.50
-    time = 'undefined'
+    time = "undefined"
 ```
 
 <div class="prompt input_prompt">
@@ -407,10 +407,10 @@ import folium
 m = folium.Map(location=[lat, lon], zoom_start=4)
 
 folium.WmsTileLayer(
-    name='{} at {}'.format(title, time),
+    name="{} at {}".format(title, time),
     url=url,
     layers=layer,
-    fmt='image/png',
+    fmt="image/png",
     transparent=True,
 ).add_to(m)
 

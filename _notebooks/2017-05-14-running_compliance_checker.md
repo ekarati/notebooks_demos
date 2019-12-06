@@ -41,7 +41,7 @@ In&nbsp;[2]:
 
 ```python
 # First import the compliance checker and test that it is installed properly.
-from compliance_checker.runner import ComplianceChecker, CheckSuite
+from compliance_checker.runner import CheckSuite, ComplianceChecker
 
 # Load all available checker classes.
 check_suite = CheckSuite()
@@ -58,7 +58,7 @@ In&nbsp;[3]:
 
 # See https://github.com/Unidata/netcdf-c/issues/1299
 # for the reason we need to append `#fillmismatch` to the URL.
-url = 'http://data.ioos.us/thredds/dodsC/deployments/rutgers/ru29-20150623T1046/ru29-20150623T1046.nc3.nc#fillmismatch'
+url = "http://data.ioos.us/thredds/dodsC/deployments/rutgers/ru29-20150623T1046/ru29-20150623T1046.nc3.nc#fillmismatch"
 ```
 
 ### Running Compliance Checker on the Scripps Pier shore station data
@@ -69,16 +69,16 @@ In&nbsp;[4]:
 </div>
 
 ```python
-output_file = 'buoy_testCC.txt'
+output_file = "buoy_testCC.txt"
 
 return_value, errors = ComplianceChecker.run_checker(
     ds_loc=url,
-    checker_names=['cf', 'acdd'],
+    checker_names=["cf", "acdd"],
     verbose=True,
-    criteria='normal',
+    criteria="normal",
     skip_checks=None,
     output_filename=output_file,
-    output_format='text'
+    output_format="text",
 )
 ```
 
@@ -87,7 +87,7 @@ In&nbsp;[5]:
 </div>
 
 ```python
-with open(output_file, 'r') as f:
+with open(output_file, "r") as f:
     print(f.read())
 ```
 <div class="output_area"><div class="prompt"></div>

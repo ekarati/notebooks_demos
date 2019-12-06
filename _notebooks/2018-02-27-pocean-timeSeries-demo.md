@@ -28,19 +28,20 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
-
 x = np.arange(100, 110, 0.1)
 start = datetime.now() - timedelta(days=7)
 
-df = pd.DataFrame({
-    'time': [start + timedelta(days=n) for n in range(len(x))],
-    'longitude': -48.6256,
-    'latitude': -27.5717,
-    'depth': 10,
-    'u': np.sin(x),
-    'v': np.cos(x),
-    'station': 'fake buoy',
-})
+df = pd.DataFrame(
+    {
+        "time": [start + timedelta(days=n) for n in range(len(x))],
+        "longitude": -48.6256,
+        "latitude": -27.5717,
+        "depth": 10,
+        "u": np.sin(x),
+        "v": np.cos(x),
+        "station": "fake buoy",
+    }
+)
 
 
 df.tail()
@@ -146,21 +147,14 @@ In&nbsp;[2]:
 import matplotlib.pyplot as plt
 from oceans.plotting import stick_plot
 
-q = stick_plot(
-    [t.to_pydatetime() for t in df['time']],
-    df['u'],
-    df['v']
-)
+q = stick_plot([t.to_pydatetime() for t in df["time"]], df["u"], df["v"])
 
 ref = 1
 qk = plt.quiverkey(
-    q, 0.1, 0.85, ref,
-    f"{ref} m s$^{-1}$",
-    labelpos='N',
-    coordinates='axes'
+    q, 0.1, 0.85, ref, f"{ref} m s$^{-1}$", labelpos="N", coordinates="axes"
 )
 
-plt.xticks(rotation=70);
+plt.xticks(rotation=70)
 ```
 
 
@@ -178,37 +172,19 @@ In&nbsp;[3]:
 
 ```python
 attributes = {
-    'global': {
-        'title': 'Fake mooring',
-        'summary': 'Vector current meter ADCP @ 10 m',
-        'institution': 'Restaurant at the end of the universe',
-        'cdm_timeseries_variables': 'station',
-        'subsetVariables': 'depth',
+    "global": {
+        "title": "Fake mooring",
+        "summary": "Vector current meter ADCP @ 10 m",
+        "institution": "Restaurant at the end of the universe",
+        "cdm_timeseries_variables": "station",
+        "subsetVariables": "depth",
     },
-    'longitude': {
-        'units': 'degrees_east',
-        'standard_name': 'longitude',
-    },
-    'latitude': {
-        'units': 'degrees_north',
-        'standard_name': 'latitude',
-    },
-    'z': {
-        'units': 'm',
-        'standard_name': 'depth',
-        'positive': 'down',
-    },
-    'u': {
-        'units': 'm/s',
-        'standard_name': 'eastward_sea_water_velocity',
-    },
-    'v': {
-        'units': 'm/s',
-        'standard_name': 'northward_sea_water_velocity',
-    },
-    'station': {
-        'cf_role': 'timeseries_id'
-    },
+    "longitude": {"units": "degrees_east", "standard_name": "longitude",},
+    "latitude": {"units": "degrees_north", "standard_name": "latitude",},
+    "z": {"units": "m", "standard_name": "depth", "positive": "down",},
+    "u": {"units": "m/s", "standard_name": "eastward_sea_water_velocity",},
+    "v": {"units": "m/s", "standard_name": "northward_sea_water_velocity",},
+    "station": {"cf_role": "timeseries_id"},
 }
 ```
 
@@ -219,7 +195,7 @@ In&nbsp;[4]:
 </div>
 
 ```python
-axes = {'t': 'time', 'x': 'longitude', 'y': 'latitude', 'z': 'depth'}
+axes = {"t": "time", "x": "longitude", "y": "latitude", "z": "depth"}
 ```
 
 <div class="prompt input_prompt">
@@ -230,13 +206,9 @@ In&nbsp;[5]:
 from pocean.dsg.timeseries.om import OrthogonalMultidimensionalTimeseries
 from pocean.utils import downcast_dataframe
 
-
 df = downcast_dataframe(df)  # safely cast depth np.int64 to np.int32
 dsg = OrthogonalMultidimensionalTimeseries.from_dataframe(
-    df,
-    output='fake_buoy.nc',
-    attributes=attributes,
-    axes=axes,
+    df, output="fake_buoy.nc", attributes=attributes, axes=axes,
 )
 ```
 
@@ -307,7 +279,7 @@ In&nbsp;[7]:
 </div>
 
 ```python
-dsg.getncattr('featureType')
+dsg.getncattr("featureType")
 ```
 
 
@@ -354,7 +326,7 @@ In&nbsp;[10]:
 </div>
 
 ```python
-dsg.axes('T')
+dsg.axes("T")
 ```
 
 
@@ -376,7 +348,7 @@ In&nbsp;[11]:
 </div>
 
 ```python
-dsg.axes('Z')
+dsg.axes("Z")
 ```
 
 
@@ -397,7 +369,7 @@ In&nbsp;[12]:
 </div>
 
 ```python
-dsg.vatts('station')
+dsg.vatts("station")
 ```
 
 
@@ -412,7 +384,7 @@ In&nbsp;[13]:
 </div>
 
 ```python
-dsg['station'][:]
+dsg["station"][:]
 ```
 
 
@@ -427,7 +399,7 @@ In&nbsp;[14]:
 </div>
 
 ```python
-dsg.vatts('u')
+dsg.vatts("u")
 ```
 
 
