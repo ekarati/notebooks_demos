@@ -4,6 +4,7 @@ layout: single
 ---
 
 <div id="gallery">
+<div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2020-02-14-QARTOD_ioos_qc_Water-Level-Example"><figcaption>No title</figcaption><img src="images/placeholder.png"></a></div>
 <div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2019-05-27-hurricane_gis_part02"><figcaption>Accessing data from SOS using NHC GIS files</figcaption><img src="images/placeholder.png"></a></div>
 <div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2019-03-08-grids-temperature"><figcaption>IOOS models: Temperature Horizontal Slices</figcaption><img src="images/2019-03-08-grids-temperature.png"></a></div>
 <div><a href="{{ site.url }}{{ site.baseurl }}/notebooks/2019-02-26-hurricane_gis_part01"><figcaption>Accessing data from SOS using NHC GIS files</figcaption><img src="images/placeholder.png"></a></div>
