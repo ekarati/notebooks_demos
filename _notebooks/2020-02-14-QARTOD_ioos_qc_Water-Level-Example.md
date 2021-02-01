@@ -1,4 +1,4 @@
----
+None---
 title: "IOOS QARTOD software (ioos_qc) to"
 layout: notebook
 
@@ -284,7 +284,7 @@ plot_results(
 )
 
 
-An actual spike test, based on a data increase threshold, flags similar spikes to the gross range test but also indetifies other suspect unsual increases in the series.
+An actual spike test, based on a data increase threshold, flags similar spikes to the gross range test but also indetifies other suspect unusual increases in the series.
 
 <div class="prompt input_prompt">
 In&nbsp;[7]:
