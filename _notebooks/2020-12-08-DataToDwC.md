@@ -1075,14 +1075,6 @@ measurementorfact.sample(n=10)
 **Author:** Mathew Biddle
 
 This notebook is a Python implementation of the R notebook created by Abby Benson [IOOS_DMAC_DataToDWC_Notebook_event.R](https://github.com/ioos/bio_data_guide/blob/master/Standardizing%20Marine%20Biological%20Data/datasets/example_script_with_fake_data/IOOS_DMAC_DataToDwC_Notebook_event.R).
-
-<div class="prompt input_prompt">
-In&nbsp;[None]:
-</div>
-
-```python
-
-```
 <br>
 Right click and choose Save link as... to
 [download](https://raw.githubusercontent.com/ioos/notebooks_demos/master/notebooks/2020-12-08-DataToDwC.ipynb)
